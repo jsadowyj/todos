@@ -31,7 +31,7 @@ router.post(
 
     try {
       const userMatch = await User.findOne({ email });
-      console.log(await User.findOne({ email }));
+
       if (userMatch)
         return res
           .status(400)
@@ -51,13 +51,12 @@ router.post(
 
       res.status(201).json({ token });
     } catch (err) {
-      console.error(err);
-      throw new Error('500');
+      throw err;
     }
   }
 );
 
-// @desc    Authenticate user and send token
+// @desc    Authenticate (login) user and send token
 // @access  Public
 router.post(
   '/api/login',
@@ -73,24 +72,31 @@ router.post(
     const { email, password } = req.body;
 
     try {
+      const user = await User.findOne({ email });
+      if (!user)
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch)
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+
+      const token = jwt.sign(
+        { user: { id: user.id } },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '5 days',
+        }
+      );
+
+      res.status(201).json({ token });
     } catch (err) {
-      throw new Error();
+      throw err;
     }
-
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch)
-      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
-
-    const token = jwt.sign({ user: { id: user.id } }, process.env.JWT_SECRET, {
-      expiresIn: '5 days',
-    });
-
-    res.status(201).json({ token });
   }
 );
 
@@ -99,10 +105,11 @@ router.post(
 router.get('/api/user', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    if (!user) throw new Error('User not found');
+    if (!user)
+      return res.status(404).json({ errors: [{ msg: 'User not found' }] });
     res.json(user);
   } catch (err) {
-    throw new Error('500');
+    throw err;
   }
 });
 

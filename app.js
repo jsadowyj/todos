@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+// npm imports
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -9,19 +10,14 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) => {
-  res.json({ msg: 'API Running' });
-});
-
+// Routes
 app.use(require('./routes/api/auth'));
 
-app.get('/error', (req, res) => {
-  throw new Error('bruh');
-});
-
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.log(err.message);
-  res.status(500).json({ msg: 'Something broke on our end!' });
+  console.log(err);
+  const status = err.statusCode || 500;
+  res.status(status).json({ errors: [{ msg: 'Server Error' }] });
 });
 
 mongoose

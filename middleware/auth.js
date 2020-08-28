@@ -18,7 +18,6 @@ module.exports = (req, res, next) => {
       next();
     });
   } catch (err) {
-    console.error('Auth middleware failed.');
-    throw new Error();
+    throw err;
   }
 };
