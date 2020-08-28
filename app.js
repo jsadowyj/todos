@@ -13,6 +13,17 @@ app.get('/', (req, res) => {
   res.json({ msg: 'API Running' });
 });
 
+app.use(require('./routes/api/auth'));
+
+app.get('/error', (req, res) => {
+  throw new Error('bruh');
+});
+
+app.use((err, req, res, next) => {
+  console.log(err.message);
+  res.status(500).json({ msg: 'Something broke on our end!' });
+});
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useUnifiedTopology: true,
