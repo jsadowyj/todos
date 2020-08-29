@@ -83,13 +83,8 @@ router.post(
 router.put(
   '/api/todos/:id',
   auth,
-  check('content', 'Please input a valid content field.').isString(),
   checkObjectId('id'),
   async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
-
     try {
       const { id } = req.params;
 
@@ -105,9 +100,21 @@ router.put(
           .status(401)
           .json({ errors: [{ msg: 'Unauthorized', status: 401 }] });
 
-      const { content } = req.body;
+      const { content, completed } = req.body;
 
-      todo.content = content;
+      if (!content && typeof completed === 'undefined')
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Bad Request',
+              status: 400,
+            },
+          ],
+        });
+
+      if (content) todo.content = content;
+
+      if (typeof completed !== 'undefined') todo.completed = completed;
 
       await todo.save();
 
