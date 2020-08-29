@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -10,6 +9,7 @@ const auth = require('../../middleware/auth');
 
 const router = express.Router();
 
+// @route   POST /api/register
 // @desc    Register User and send token
 // @access  Public
 router.post(
@@ -56,7 +56,8 @@ router.post(
   }
 );
 
-// @desc    Authenticate (login) user and send token
+// @route   POST /api/login
+// @desc    Login user and send token
 // @access  Public
 router.post(
   '/api/login',
@@ -100,6 +101,7 @@ router.post(
   }
 );
 
+// @route   GET /api/user
 // @desc    Respond with user data minus the password (of course)
 // @access  Private
 router.get('/api/user', auth, async (req, res) => {

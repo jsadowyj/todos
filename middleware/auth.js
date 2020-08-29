@@ -6,14 +6,18 @@ module.exports = (req, res, next) => {
   const authHeader = req.header('Authorization');
 
   if (!authHeader)
-    return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
+    return res
+      .status(401)
+      .json({ errors: [{ msg: 'Unauthorized', status: 401 }] });
 
   const token = authHeader.split(' ')[1];
 
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
       if (err)
-        return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
+        return res
+          .status(401)
+          .json({ errors: [{ msg: 'Unauthorized', status: 401 }] });
       req.user = data.user;
       next();
     });
