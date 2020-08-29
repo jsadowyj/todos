@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-// npm imports
 const express = require('express');
 const mongoose = require('mongoose');
 

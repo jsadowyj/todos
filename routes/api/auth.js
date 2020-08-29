@@ -22,7 +22,7 @@ router.post(
       'Please make sure your password is at least 6 characters long.'
     ).isLength({ min: 6 }),
   ],
-  async (req, res) => {
+  async (req, res, next) => {
     // Validate input with express-validator
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -60,7 +60,7 @@ router.post(
       // Return 201 along with the JWT token
       res.status(201).json({ token });
     } catch (err) {
-      throw err;
+      next(err);
     }
   }
 );
@@ -74,7 +74,7 @@ router.post(
     check('email', 'Please enter a valid email.').isEmail(),
     check('password', 'Please enter a password.').exists(),
   ],
-  async (req, res) => {
+  async (req, res, next) => {
     // Validate inputs with express-validator
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -114,7 +114,7 @@ router.post(
       // Respond with the token
       res.status(201).json({ token });
     } catch (err) {
-      throw err;
+      next(err);
     }
   }
 );
@@ -122,7 +122,7 @@ router.post(
 // @route   GET /api/user
 // @desc    Respond with user data minus the password (of course)
 // @access  Private
-router.get('/api/user', auth, async (req, res) => {
+router.get('/api/user', auth, async (req, res, next) => {
   try {
     // Find a user that matches with request's userId
     const user = await User.findById(req.user.id).select('-password');
@@ -132,7 +132,7 @@ router.get('/api/user', auth, async (req, res) => {
     // Respond with user data
     res.json(user);
   } catch (err) {
-    throw err;
+    next(err);
   }
 });
 
