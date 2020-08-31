@@ -1,18 +1,29 @@
 import React from 'react';
 
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Container, Button } from 'semantic-ui-react';
 
 const Navbar = () => {
+  const path = window.location.pathname;
   return (
-    <Menu size="large" inverted secondary pointing>
-      <Menu.Item header>
-        <Icon name="clipboard list" />
-        Todos
-      </Menu.Item>
-      <Menu.Menu position="right">
-        <Menu.Item name="Home" active onClick={() => console.log('Home')} />
-      </Menu.Menu>
-    </Menu>
+    <Container as="nav">
+      <Menu inverted secondary pointing>
+        <Menu.Item
+          name="todos"
+          active={path === '/'}
+          onClick={() => console.log('Home')}
+        />
+        <Menu.Item
+          active={path === '/add'}
+          name="add todo"
+          onClick={() => console.log('Add Todo')}
+        />
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Button inverted>Sign In</Button>
+          </Menu.Item>
+        </Menu.Menu>
+      </Menu>
+    </Container>
   );
 };
 

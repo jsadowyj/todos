@@ -15,12 +15,17 @@ const router = express.Router();
 router.post(
   '/api/register',
   [
-    check('name', 'Name is required.').not().isEmpty(),
-    check('email', 'Please enter a valid email.').isEmail(),
+    check('name', 'Name is required.').not().isEmpty().escape().trim(),
+    check('email', 'Please enter a valid email.')
+      .isEmail()
+      .normalizeEmail()
+      .trim(),
     check(
       'password',
       'Please make sure your password is at least 6 characters long.'
-    ).isLength({ min: 6 }),
+    )
+      .isLength({ min: 6 })
+      .trim(),
   ],
   async (req, res, next) => {
     // Validate input with express-validator
@@ -71,8 +76,8 @@ router.post(
 router.post(
   '/api/login',
   [
-    check('email', 'Please enter a valid email.').isEmail(),
-    check('password', 'Please enter a password.').exists(),
+    check('email', 'Please enter a valid email.').isEmail().trim(),
+    check('password', 'Please enter a password.').exists().trim(),
   ],
   async (req, res, next) => {
     // Validate inputs with express-validator

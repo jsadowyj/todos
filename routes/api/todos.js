@@ -66,7 +66,7 @@ router.get(
 router.post(
   '/api/todos',
   auth,
-  check('content').isString().isLength({ min: 1 }),
+  check('content').isString().isLength({ min: 1 }).trim().escape(),
   async (req, res, next) => {
     // check for any express-validator errors
     const errors = validationResult(req);
@@ -98,6 +98,12 @@ router.put(
   '/api/todos/:id',
   auth,
   checkObjectId('id'),
+  check('content', 'Content is not valid.')
+    .isString()
+    .isLength({ min: 1 })
+    .trim()
+    .escape(),
+  check('completed', 'Completed must be a boolean').isBoolean(),
   async (req, res, next) => {
     try {
       // Destructure id from request parameters

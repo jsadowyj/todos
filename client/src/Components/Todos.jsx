@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import uuid from 'react-uuid';
-import { Header, List, Icon } from 'semantic-ui-react';
+import { Header, List, Icon, Container } from 'semantic-ui-react';
+
+import '../css/Todos.css';
 
 import { TodosContext } from '../contexts/TodosContext';
 
@@ -17,26 +19,28 @@ const Todos = () => {
 
   return (
     <>
-      <Header inverted as="h2">
-        Todos:
+      <Header inverted as="h1" id="header">
+        Todos
       </Header>
-      <List className="list-control" inverted selection>
-        {todos.map((todo) => (
-          <List.Item key={uuid()} onClick={() => handleTodoClick(todo)}>
-            <Icon name="clipboard outline" />
-            <List.Content>
-              <List.Header
-                style={{
-                  textDecoration: todo.completed ? 'line-through' : '',
-                  color: todo.completed ? '#8f8f8f' : 'white',
-                }}
-              >
-                {todo.title}
-              </List.Header>
-            </List.Content>
-          </List.Item>
-        ))}
-      </List>
+      <Container>
+        <List className="list-control" size="big" inverted selection>
+          {todos.map((todo) => (
+            <List.Item key={uuid()} onClick={() => handleTodoClick(todo)}>
+              <Icon name="clipboard outline" />
+              <List.Content>
+                <List.Header
+                  style={{
+                    textDecoration: todo.completed ? 'line-through' : '',
+                    color: todo.completed ? '#8f8f8f' : 'white',
+                  }}
+                >
+                  {todo.title}
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
+      </Container>
     </>
   );
 };
