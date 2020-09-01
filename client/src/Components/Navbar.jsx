@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Menu, Container, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const path = window.location.pathname;
@@ -19,7 +20,9 @@ const Navbar = () => {
         />
         <Menu.Menu position="right">
           <Menu.Item>
-            <Button inverted>Sign In</Button>
+            <Button inverted as={Link} to="/login">
+              Sign In
+            </Button>
           </Menu.Item>
         </Menu.Menu>
       </Menu>

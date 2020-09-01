@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import Todos from './Todos';
+import SignIn from './SignIn';
 
 import { TodosProvider } from '../contexts/TodosContext';
 
@@ -20,6 +21,9 @@ const App = () => {
             <TodosProvider>
               <Todos />
             </TodosProvider>
+          </Route>
+          <Route path="/login" exact>
+            <SignIn />
           </Route>
           <Route component={() => <h1>404</h1>}></Route>
         </Switch>
