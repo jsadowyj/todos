@@ -1,0 +1,26 @@
+html {
+  overflow: auto;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#sign-in,
+#sign-up {
+  margin-top: 3rem;
+  /* height: 30%; */
+  width: 40%;
+}
+
+.icon-control {
+  text-align: center;
+}
+
+.signup-text {
+  color: #b1b1b1;
+}
+.signup-text a {
+  margin-left: 0.1rem;
+}
