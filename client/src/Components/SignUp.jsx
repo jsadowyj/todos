@@ -47,16 +47,14 @@ const SignUp = () => {
     const asyncRequest = async () => {
       try {
         const { data } = await axios.post('/api/register', {
-          name: `${firstName} ${lastName}`,
+          name: `${firstName} ${lastName}`.trim(),
           email,
           password,
         });
         console.log('Login successful');
-        console.log(data);
-        localStorage.setItem('authToken', data.token);
         setLoading(false);
         setFormData(defaultFormData);
-        history.push('');
+        history.push('/login?success=true');
       } catch (err) {
         console.log(err.response);
         setLoading(false);

@@ -13,7 +13,7 @@ import { Link, useHistory } from 'react-router-dom';
 import PasswordInput from './PasswordInput';
 import '../css/SignIn.css';
 
-const SignIn = () => {
+const SignIn = (props) => {
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
@@ -71,7 +71,13 @@ const SignIn = () => {
           inverted
           onSubmit={handleSubmit}
           error={serverMessage ? true : false}
+          success={props.location.search === '?success=true' && !serverMessage}
         >
+          <Message
+            success
+            header="Sign Up Complete"
+            content="Please log in with your new account"
+          />
           <Message
             error
             header={serverMessage ? serverMessage.header : 'Error'}
@@ -92,7 +98,9 @@ const SignIn = () => {
           <Form.Field className="signup-text">
             Don't have an account? <Link to="signup">Sign Up</Link>
           </Form.Field>
-          <Button type="submit">Login</Button>
+          <Button loading={loading} type="submit">
+            Login
+          </Button>
         </Form>
       </Container>
     </div>

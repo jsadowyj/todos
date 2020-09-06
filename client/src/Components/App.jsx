@@ -23,9 +23,7 @@ const App = () => {
               <Todos />
             </TodosProvider>
           </Route>
-          <Route path="/login" exact>
-            <SignIn />
-          </Route>
+          <Route path="/login" exact component={SignIn} />
           <Route path="/signup" exact>
             <SignUp />
           </Route>
