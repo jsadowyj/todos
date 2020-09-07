@@ -1,27 +1,77 @@
-import React, { useContext } from 'react';
-import uuid from 'react-uuid';
-import { Header, List, Icon, Container } from 'semantic-ui-react';
+import React, { useState, useEffect } from 'react';
+import {
+  Header,
+  List,
+  Icon,
+  Container,
+  Message,
+  Transition,
+} from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
 
+import Loading from '../Components/Loading';
+import Navbar from '../Components/Navbar';
+
+import { useAuthStore } from '../stores/authStore';
+import { useTodoStore } from '../stores/todoStore';
 import '../css/Todos.css';
-
-import { TodosContext } from '../contexts/TodosContext';
-import { Link, useHistory } from 'react-router-dom';
 
 const Todos = () => {
   const history = useHistory();
 
-  const [todos, setTodos] = useContext(TodosContext);
+  const [loading, setLoading] = useState(true);
 
-  const handleTodoClick = (todo) => {
-    setTodos(
-      todos.map((t) =>
-        t.title === todo.title ? { ...todo, completed: !todo.completed } : t
-      )
-    );
+  const [showError, setShowError] = useState(false);
+
+  const { isAuth, fetchUser } = useAuthStore(); // add user
+
+  const { todos, fetchAllTodos, updateTodo, toggleCompleted } = useTodoStore();
+
+  useEffect(() => {
+    (async () => {
+      await fetchUser();
+      await fetchAllTodos();
+      setLoading(false);
+    })();
+  }, [fetchUser, fetchAllTodos]);
+
+  const handleTodoClick = async (todo) => {
+    try {
+      toggleCompleted(todo._id);
+      await updateTodo(todo._id, { completed: !todo.completed });
+    } catch (err) {
+      setShowError(true);
+    }
   };
+
+  if (loading) return <Loading />;
+
+  if (!isAuth)
+    return (
+      <>
+        <Navbar />
+        <Header inverted as="h1" id="header">
+          Todos
+        </Header>
+        <Message warning>
+          <Message.Header>Sign In</Message.Header>
+          <p>Please sign in to view your Todos</p>
+        </Message>
+      </>
+    );
 
   return (
     <>
+      <Navbar auth={true} />
+      <Transition visible={showError} animation="fade" duration={500}>
+        <Message
+          error
+          // hidden={!showError}
+          header="Uh oh"
+          content="Something went wrong on our end. Please try again later"
+          onDismiss={() => setShowError(false)}
+        />
+      </Transition>
       <Header inverted as="h1" id="header">
         Todos
       </Header>
@@ -34,7 +84,7 @@ const Todos = () => {
           verticalAlign="middle"
         >
           {todos.map((todo) => (
-            <List.Item key={uuid()}>
+            <List.Item key={todo._id}>
               <Icon name="clipboard outline" color="grey" />
               <List.Content>
                 <List.Header
@@ -44,20 +94,20 @@ const Todos = () => {
                   }}
                   onClick={() => handleTodoClick(todo)}
                 >
-                  {todo.title}
+                  {todo.content}
                 </List.Header>
               </List.Content>
               <Icon
                 color="blue"
                 link
                 name="edit"
-                onClick={() => history.push('/edit/1')}
+                onClick={() => history.push(`/edit/${todo._id}`)}
               />
               <Icon
                 link
                 name="close"
                 color="red"
-                onClick={() => history.push('/delete/1')}
+                onClick={() => history.push(`/delete/${todo._id}`)}
               />
             </List.Item>
           ))}

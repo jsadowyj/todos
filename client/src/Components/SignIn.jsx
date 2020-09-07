@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {
-  Container,
-  Form,
-  Button,
-  Message,
-  Icon,
-  Header,
-} from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
 import { Link, useHistory } from 'react-router-dom';
 
 import PasswordInput from './PasswordInput';

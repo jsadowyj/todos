@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Form,
-  Button,
-  Message,
-  Icon,
-  Header,
-} from 'semantic-ui-react';
+import { Container, Form, Button, Message, Header } from 'semantic-ui-react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
@@ -46,7 +39,7 @@ const SignUp = () => {
     setLoading(true);
     const asyncRequest = async () => {
       try {
-        const { data } = await axios.post('/api/register', {
+        await axios.post('/api/register', {
           name: `${firstName} ${lastName}`.trim(),
           email,
           password,
