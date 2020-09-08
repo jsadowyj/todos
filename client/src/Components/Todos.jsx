@@ -29,7 +29,7 @@ const Todos = () => {
 
   useEffect(() => {
     (async () => {
-      await fetchUser();
+      if (!isAuth) await fetchUser();
       await fetchAllTodos();
       setLoading(false);
     })();
@@ -62,11 +62,10 @@ const Todos = () => {
 
   return (
     <>
-      <Navbar auth={true} />
+      <Navbar auth />
       <Transition visible={showError} animation="fade" duration={500}>
         <Message
           error
-          // hidden={!showError}
           header="Uh oh"
           content="Something went wrong on our end. Please try again later"
           onDismiss={() => setShowError(false)}
@@ -86,13 +85,12 @@ const Todos = () => {
           {todos.map((todo) => (
             <List.Item key={todo._id}>
               <Icon name="clipboard outline" color="grey" />
-              <List.Content>
+              <List.Content onClick={() => handleTodoClick(todo)}>
                 <List.Header
                   style={{
                     textDecoration: todo.completed ? 'line-through' : '',
                     color: todo.completed ? '#8f8f8f' : 'white',
                   }}
-                  onClick={() => handleTodoClick(todo)}
                 >
                   {todo.content}
                 </List.Header>

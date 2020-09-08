@@ -1,11 +1,16 @@
 import React from 'react';
 import { Loader, Container } from 'semantic-ui-react';
 
+import Navbar from './Navbar';
+
 const Loading = () => {
   return (
-    <Container>
-      <Loader size="large" active></Loader>
-    </Container>
+    <>
+      <Navbar auth />
+      <Container>
+        <Loader size="large" active></Loader>
+      </Container>
+    </>
   );
 };
 

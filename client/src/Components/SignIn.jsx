@@ -42,7 +42,7 @@ const SignIn = (props) => {
       } catch (err) {
         console.log(err.response);
         setLoading(false);
-        setFormData(defaultFormData);
+        setFormData({ email, password: '' });
         setServerMessage({
           header: 'Error',
           content: err.response.data.errors[0].msg,

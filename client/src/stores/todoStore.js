@@ -63,4 +63,27 @@ export const useTodoStore = create((set, get) => ({
       ),
     });
   },
+  addTodo: async ({ content }) => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) return console.error('No auth token');
+      if (!content) return console.error('Must provide content to add todo');
+
+      const { data } = await axios.post(
+        '/api/todos',
+        {
+          content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
 }));

@@ -1,14 +1,19 @@
 import React from 'react';
 
-import { Menu, Container, Button } from 'semantic-ui-react';
+import { Menu, Container, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useAuthStore } from '../stores/authStore';
 
 const Navbar = ({ auth = false }) => {
+  const isAuth = useAuthStore((state) => state.isAuth);
+
+  const history = useHistory();
+
   const path = window.location.pathname;
 
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
 
   return (
     <Container as="nav">
@@ -16,19 +21,26 @@ const Navbar = ({ auth = false }) => {
         <Menu.Item
           name="todos"
           active={path === '/'}
-          onClick={() => console.log('Home')}
+          onClick={() => history.push('')}
         />
         <Menu.Item
           active={path === '/add'}
           disabled={!auth}
           name="add todo"
-          onClick={() => console.log('Add Todo')}
+          onClick={() => history.push('/add')}
         />
         <Menu.Menu position="right">
+          {auth && user && (
+            <Menu.Item id="user">
+              <Icon name="user circle" />
+              {user.name.split(' ')[0]}
+            </Menu.Item>
+          )}
           <Menu.Item>
             {auth ? (
-              <Button inverted onClick={logout}>
-                Sign Out
+              <Button icon inverted onClick={logout}>
+                <Icon name="sign out" />
+                <span id="button-text">Sign Out</span>
               </Button>
             ) : (
               <Button inverted as={Link} to="/login">
