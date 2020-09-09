@@ -7,6 +7,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Loading from './Loading';
 import AddTodo from './AddTodo';
+import EditTodo from './EditTodo';
 import ProtectedRoute from './ProtectedRoute';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/login" exact component={SignIn} />
           <Route path="/signup" exact component={SignUp} />
           <ProtectedRoute path="/add" exact component={AddTodo} />
+          <ProtectedRoute path="/edit/:id" exact component={EditTodo} />
           <Route>
             <Loading />
           </Route>

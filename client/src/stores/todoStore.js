@@ -86,4 +86,26 @@ export const useTodoStore = create((set, get) => ({
       throw err;
     }
   },
+  deleteTodo: async (id) => {
+    try {
+      if (!id) return console.error('No id specified');
+
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) return console.error('No auth token');
+
+      const todos = get().todos;
+
+      const filteredTodos = todos.filter((todo) => todo._id !== id);
+
+      set({ todos: filteredTodos });
+
+      return await axios.delete(`/api/todos/${id}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+    } catch (err) {
+      console.error(err);
+      console.log(err.response);
+      throw err;
+    }
+  },
 }));

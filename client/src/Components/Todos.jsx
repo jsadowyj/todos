@@ -22,10 +22,17 @@ const Todos = () => {
   const [loading, setLoading] = useState(true);
 
   const [showError, setShowError] = useState(false);
+  const [showMessage, setShowMessage] = useState(true);
 
   const { isAuth, fetchUser } = useAuthStore(); // add user
 
-  const { todos, fetchAllTodos, updateTodo, toggleCompleted } = useTodoStore();
+  const {
+    todos,
+    fetchAllTodos,
+    updateTodo,
+    toggleCompleted,
+    deleteTodo,
+  } = useTodoStore();
 
   useEffect(() => {
     (async () => {
@@ -33,12 +40,20 @@ const Todos = () => {
       await fetchAllTodos();
       setLoading(false);
     })();
-  }, [fetchUser, fetchAllTodos]);
+  }, [fetchUser, fetchAllTodos, isAuth]);
 
   const handleTodoClick = async (todo) => {
     try {
       toggleCompleted(todo._id);
       await updateTodo(todo._id, { completed: !todo.completed });
+    } catch (err) {
+      setShowError(true);
+    }
+  };
+
+  const handleDelete = async (todo) => {
+    try {
+      await deleteTodo(todo._id);
     } catch (err) {
       setShowError(true);
     }
@@ -63,6 +78,7 @@ const Todos = () => {
   return (
     <>
       <Navbar auth />
+
       <Transition visible={showError} animation="fade" duration={500}>
         <Message
           error
@@ -74,6 +90,15 @@ const Todos = () => {
       <Header inverted as="h1" id="header">
         Todos
       </Header>
+      {todos.length === 0 ? (
+        <Transition visible={showMessage} animation="fade" duration={500}>
+          <Message
+            header="No Todos"
+            content="Click the add todo button to add your first todo."
+            onDismiss={() => setShowMessage(false)}
+          />
+        </Transition>
+      ) : null}
       <Container>
         <List
           className="list-control"
@@ -105,7 +130,7 @@ const Todos = () => {
                 link
                 name="close"
                 color="red"
-                onClick={() => history.push(`/delete/${todo._id}`)}
+                onClick={() => handleDelete(todo)}
               />
             </List.Item>
           ))}

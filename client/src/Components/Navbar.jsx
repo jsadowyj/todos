@@ -6,9 +6,9 @@ import { useHistory } from 'react-router-dom';
 
 import { useAuthStore } from '../stores/authStore';
 
-const Navbar = ({ auth = false }) => {
-  const isAuth = useAuthStore((state) => state.isAuth);
+import '../css/Navbar.css';
 
+const Navbar = ({ auth = false }) => {
   const history = useHistory();
 
   const path = window.location.pathname;
@@ -29,7 +29,7 @@ const Navbar = ({ auth = false }) => {
           name="add todo"
           onClick={() => history.push('/add')}
         />
-        <Menu.Menu position="right">
+        <Menu.Menu id="right-menu" position="right">
           {auth && user && (
             <Menu.Item id="user">
               <Icon name="user circle" />

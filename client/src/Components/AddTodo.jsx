@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 
-import {
-  Container,
-  Form,
-  Button,
-  Message,
-  Transition,
-} from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 
 import { useHistory } from 'react-router-dom';
 
 import { useTodoStore } from '../stores/todoStore';
 
 import Navbar from './Navbar';
+import AddForm from './TodoForm';
 
 import '../css/AddTodo.css';
 
@@ -38,33 +33,12 @@ const AddTodo = () => {
     <>
       <Navbar auth />
       <Container>
-        <Form id="add-todo" inverted size="huge">
-          <Transition visible={showError} animation="fade" duration={500}>
-            <Message
-              size="mini"
-              error
-              header="Uh oh"
-              content="Could not properly complete request. Please try again later"
-              onDismiss={() => setShowError(false)}
-            />
-          </Transition>
-          <Form.Input
-            name="todo"
-            label="Todo"
-            placeholder="Walk the dog"
-            value={content}
-            onChange={(e, { value }) => setContent(value)}
-          />
-          <Button
-            onClick={handleSubmit}
-            disabled={content.length === 0}
-            primary
-            fluid
-            size="large"
-          >
-            Add
-          </Button>
-        </Form>
+        <AddForm
+          error={[showError, setShowError]}
+          handleSubmit={handleSubmit}
+          content={[content, setContent]}
+          buttonText="Add"
+        />
       </Container>
     </>
   );
